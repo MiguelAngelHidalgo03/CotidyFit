@@ -22,15 +22,6 @@ function scrollToContact() {
   document.getElementById("contacto")?.scrollIntoView({ behavior: "smooth" });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  if (typeof emailjs !== 'undefined') {
-    // Usar variables de entorno de Vercel o valores por defecto
-    const publicKey = window.VITE_EMAILJS_PUBLIC_KEY || 'BrforIbSPFKtOg9Or';
-    emailjs.init(publicKey);
-  }
-  document.getElementById('contactForm')?.addEventListener("submit", handleFormSubmit);
-});
-
 function handleFormSubmit(e) {
   e.preventDefault();
   
@@ -57,36 +48,36 @@ function handleFormSubmit(e) {
     altura: document.getElementById("altura")?.value || ''
   };
   
-  const htmlMessage = `<h2>Nueva solicitud de CotidyFit</h2><p><strong>Nombre:</strong> ${formData.nombre}</p><p><strong>Email:</strong> ${formData.email}</p><p><strong>Frecuencia:</strong> ${formData.frecuencia}</p><p><strong>Personas:</strong> ${formData.personas}</p><p><strong>Objetivo:</strong> ${formData.objetivo}</p><p><strong>Lesiones:</strong> ${formData.lesion || 'Ninguna'}</p><p><strong>Edad:</strong> ${formData.edad}</p><p><strong>Lugar:</strong> ${formData.lugar}</p><p><strong>Disponibilidad:</strong> ${formData.disponibilidad}</p><p><strong>Frecuencia deseada:</strong> ${formData.frecuencia_deseada}</p><p><strong>Cuándo empezar:</strong> ${formData.inicio}</p><p><strong>Peso:</strong> ${formData.peso ? formData.peso + ' kg' : 'N/A'}</p><p><strong>Altura:</strong> ${formData.altura ? formData.altura + ' cm' : 'N/A'}</p>`;
-  
-  // Usar variables de entorno de Vercel o valores por defecto
-  const serviceId = window.VITE_EMAILJS_SERVICE_ID || 'service_0pz3f4n';
-  const templateId = window.VITE_EMAILJS_TEMPLATE_ID || 'template_cotidyfit';
-  
-  emailjs.send(serviceId, templateId, {
-    to_email: "cotidyfit@gmail.com",
-    from_email: formData.email,
-    from_name: formData.nombre,
-    message: htmlMessage,
-    ...formData
-  }).then(() => {
-    formMessage.className = "form-message success";
-    formMessage.textContent = "✓ ¡Solicitud enviada con éxito! Te contactaremos pronto.";
-    document.getElementById("contactForm")?.reset();
+  fetch('/api/send-email', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(formData)
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      formMessage.className = "form-message success";
+      formMessage.textContent = "✓ ¡Solicitud enviada con éxito! Te contactaremos pronto.";
+      document.getElementById("contactForm")?.reset();
+      setTimeout(() => {
+        formMessage.classList.remove("success");
+        formMessage.textContent = "";
+      }, 5000);
+    } else {
+      formMessage.className = "form-message error";
+      formMessage.textContent = "✗ Error al enviar. Por favor intenta nuevamente.";
+    }
     submitBtn.disabled = false;
     submitBtn.textContent = "Enviar Solicitud";
-    setTimeout(() => {
-      formMessage.classList.remove("success");
-      formMessage.textContent = "";
-    }, 5000);
-  }, () => {
+  })
+  .catch(() => {
     formMessage.className = "form-message error";
     formMessage.textContent = "✗ Error al enviar. Por favor intenta nuevamente.";
     submitBtn.disabled = false;
     submitBtn.textContent = "Enviar Solicitud";
-    setTimeout(() => {
-      formMessage.classList.remove("error");
-      formMessage.textContent = "";
-    }, 5000);
   });
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('contactForm')?.addEventListener("submit", handleFormSubmit);
+});
