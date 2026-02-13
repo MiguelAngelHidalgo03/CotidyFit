@@ -52,7 +52,7 @@ module.exports = async function handler(req, res) {
         /* Header */
         .header { background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); padding: 40px 20px; text-align: center; }
         .logo-box { margin-bottom: 15px; }
-        .logo-box img { max-width: 80px; height: auto; display: block; margin: 0 auto; }
+        .logo-box img { max-width: 100px; height: 100px; width: 100px; display: block; margin: 0 auto; border-radius: 50%; background: white; padding: 10px; box-sizing: border-box; }
         .header h1 { color: white; font-size: 28px; margin: 10px 0; }
         .header p { color: rgba(255,255,255,0.9); font-size: 14px; }
         
