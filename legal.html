@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Información Legal - CotidyFit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/build/index.min.js"></script>
+  <script src="config.js"></script>
+  <style>
+    .legal-container {
+      max-width: 900px;
+      margin: 80px auto 60px;
+      padding: 0 40px;
+    }
+
+    .legal-section {
+      margin-bottom: 40px;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+      animation: fadeInUp 0.8s ease;
+    }
+
+    .legal-section h2 {
+      color: #1e3a8a;
+      font-size: 28px;
+      margin-bottom: 20px;
+      border-bottom: 3px solid #3b82f6;
+      padding-bottom: 15px;
+    }
+
+    .legal-section h3 {
+      color: #1e3a8a;
+      font-size: 18px;
+      margin-top: 25px;
+      margin-bottom: 15px;
+    }
+
+    .legal-section p {
+      color: #6b7280;
+      line-height: 1.8;
+      margin-bottom: 15px;
+      font-size: 15px;
+    }
+
+    .legal-section ul {
+      color: #6b7280;
+      margin-left: 25px;
+      line-height: 1.8;
+    }
+
+    .legal-section li {
+      margin-bottom: 10px;
+    }
+
+    .legal-nav {
+      background: white;
+      padding: 20px 30px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .legal-nav a {
+      color: #3b82f6;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      padding: 8px 16px;
+      border-radius: 6px;
+    }
+
+    .legal-nav a:hover {
+      background: #f0f4ff;
+      color: #1e3a8a;
+    }
+
+    .legal-nav a.active {
+      background: #1e3a8a;
+      color: white;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 30px;
+      color: #3b82f6;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .back-link:hover {
+      transform: translateX(-5px);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ACTION BAR -->
+<div class="action-bar">
+  <p>🔥 Plazas abiertas para nuevos clientes online</p>
+  <div class="action-bar-contact">
+    <a href="tel:+34644595576" class="contact-item" title="Llamar">
+      <span>📞</span>
+      <span class="hide-mobile">+34 644 595 576</span>
+    </a>
+    <a href="mailto:cotidyfit@gmail.com" class="contact-item" title="Email">
+      <span>📧</span>
+      <span class="hide-mobile">cotidyfit@gmail.com</span>
+    </a>
+  </div>
+</div>
+
+<!-- TOP BAR -->
+<header class="top-bar">
+  <nav>
+    <a href="index.html">Inicio</a>
+    <a href="index.html#servicios">Servicios</a>
+  </nav>
+  <div class="logo-wrapper">
+    <div class="logo">
+      <img src="img/Logo sin lema.svg" alt="CotidyFit Logo">
+    </div>
+  </div>
+  <nav>
+    <a href="index.html#app">App</a>
+    <a href="index.html#contacto">Contacto</a>
+  </nav>
+</header>
+
+<!-- TOP BAR SCROLLED (Overlay fijo que aparece al hacer scroll) -->
+<header class="top-bar-scrolled">
+  <nav>
+    <a href="index.html">Inicio</a>
+    <a href="index.html#servicios">Servicios</a>
+  </nav>
+  <div class="logo-wrapper">
+    <div class="logo">
+      <img src="img/Logo solo dibujo.svg" alt="CotidyFit Logo">
+    </div>
+  </div>
+  <nav>
+    <a href="index.html#app">App</a>
+    <a href="index.html#contacto">Contacto</a>
+  </nav>
+</header>
+
+<div class="legal-container">
+  <a href="index.html" class="back-link">← Volver a inicio</a>
+
+  <div class="legal-nav">
+    <a href="#sobre-nosotros" class="active">Sobre Nosotros</a>
+    <a href="#contacto-legal">Contacto</a>
+    <a href="#terminos">Términos y Condiciones</a>
+    <a href="#cookies">Política de Cookies</a>
+    <a href="#privacidad">Privacidad</a>
+  </div>
+
+  <!-- SOBRE NOSOTROS -->
+  <div class="legal-section" id="sobre-nosotros">
+    <h2>Sobre Nosotros</h2>
+    <p>CotidyFit nació de una simple idea entre dos amigos que compartíamos la pasión por el fitness y el deporte. Nos dimos cuenta de que en el mercado faltaba algo: un espacio donde la gente se sintiera acompañada, donde no fuera solo números y ejercicios, sino una comunidad que se entienda y apoye mutuamente.</p>
+    
+    <h3>Nuestra Historia</h3>
+    <p>Decidimos crear CotidyFit porque creemos que la transformación física no es solo técnica, es también emocional. Somos dos entusiastas del deporte que queremos compartir con vosotros todo lo que hemos aprendido, manteniendo esa cercanía y humanidad que caracteriza a los amigos que entienden realmente lo que necesitas.</p>
+    
+    <h3>Nuestros Valores</h3>
+    <ul>
+      <li><strong>Cercanía:</strong> Tratamos a cada cliente como un amigo, no como un número</li>
+      <li><strong>Autenticidad:</strong> Creemos en el cambio real y sostenible, no en promesas vacías</li>
+      <li><strong>Apoyo:</strong> Estamos aquí cada día para acompañarte en tu transformación</li>
+      <li><strong>Pasión:</strong> Nos encanta el deporte y queremos contagiarte esa energía</li>
+      <li><strong>Comunidad:</strong> Juntos somos más fuertes, nos apoyamos mutuamente</li>
+    </ul>
+  </div>
+
+  <!-- CONTACTO -->
+  <div class="legal-section" id="contacto-legal">
+    <h2>Información de Contacto</h2>
+    <p><strong>Email:</strong> cotidyfit@gmail.com</p>
+    <p><strong>Teléfono:</strong> <a href="tel:+34644595576">+34 644 595 576</a></p>
+    <p><strong>Instagram:</strong> <a href="https://www.instagram.com/cotidyfit/" target="_blank">@cotidyfit</a></p>
+    <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/cotidyfit-b869233b0/" target="_blank">CotidyFit</a></p>
+    <p><strong>YouTube:</strong> <a href="https://www.youtube.com/channel/UCDqiJDY9mbyR-KXjl0esgXg" target="_blank">CotidyFit</a></p>
+    <p><strong>TikTok:</strong> <a href="https://www.tiktok.com/@cotidyfit?lang=es-419" target="_blank">@cotidyfit</a></p>
+    
+    <h3>Horario de Atención</h3>
+    <p>Lunes a Viernes: 9:00 - 20:00<br>
+    Sábados: 10:00 - 18:00<br>
+    Domingos: Cerrado</p>
+  </div>
+
+  <!-- TÉRMINOS Y CONDICIONES -->
+  <div class="legal-section" id="terminos">
+    <h2>Términos y Condiciones</h2>
+    
+    <h3>1. Aceptación de Términos</h3>
+    <p>Al acceder y utilizar CotidyFit, aceptas estos términos y condiciones en su totalidad. Si no estás de acuerdo con alguna parte, no debes usar la plataforma.</p>
+
+    <h3>2. Uso de la Plataforma</h3>
+    <p>La plataforma está diseñada para uso personal y no comercial. Te comprometes a:</p>
+    <ul>
+      <li>No usar la plataforma para actividades ilegales</li>
+      <li>No intentar acceder sin autorización a sistemas o datos</li>
+      <li>No transmitir viruses, malware o código malicioso</li>
+      <li>No interferir con el funcionamiento de la plataforma</li>
+      <li>Respetar los derechos de propiedad intelectual</li>
+    </ul>
+
+    <h3>3. Cuentas de Usuario</h3>
+    <p>Eres responsable de mantener la confidencialidad de tu contraseña y de todas las actividades que ocurran bajo tu cuenta. Debes notificarnos inmediatamente de cualquier uso no autorizado.</p>
+
+    <h3>4. Descargo de Responsabilidad</h3>
+    <p>Los servicios se proporcionan "tal cual" sin garantías de ningún tipo. No somos responsables de daños indirectos, incidentales o consecuentes derivados del uso de la plataforma.</p>
+
+    <h3>5. Limitación de Responsabilidad</h3>
+    <p>En la máxima medida permitida por la ley, nuestra responsabilidad total no excederá la cantidad pagada por el usuario en los últimos 12 meses.</p>
+
+    <h3>6. Modificación de Servicios</h3>
+    <p>Nos reservamos el derecho de modificar o descontinuar servicios con notificación previa cuando sea posible.</p>
+
+    <h3>7. Terminación</h3>
+    <p>Podemos terminar tu acceso a la plataforma en cualquier momento si violas estos términos o por cualquier otra razón, sin previo aviso.</p>
+
+    <h3>8. Aviso Legal</h3>
+    <p><strong>Aviso Importante:</strong> CotidyFit no sustituye la orientación médica profesional. Antes de comenzar cualquier programa de entrenamiento intenso, consulta con un profesional de la salud.</p>
+  </div>
+
+  <!-- POLÍTICA DE COOKIES -->
+  <div class="legal-section" id="cookies">
+    <h2>Política de Cookies</h2>
+    
+    <h3>¿Qué son las cookies?</h3>
+    <p>Las cookies son pequeños archivos de texto que se almacenan en tu dispositivo cuando visitas nuestro sitio web. Nos ayudan a mejorar tu experiencia.</p>
+
+    <h3>Tipos de Cookies que Utilizamos</h3>
+    
+    <h3>Cookies Esenciales</h3>
+    <p>Necesarias para el funcionamiento básico del sitio web. Sin estas cookies, partes del sitio no funcionarían correctamente.</p>
+
+    <h3>Cookies de Rendimiento</h3>
+    <p>Recopilan información sobre cómo utilizas el sitio web, como qué páginas visitas y si experimentas errores. Nos ayudan a mejorar el rendimiento.</p>
+
+    <h3>Cookies de Funcionalidad</h3>
+    <p>Recuerdan tus preferencias para proporcionarte una experiencia personalizada, como tu idioma preferido.</p>
+
+    <h3>Cookies de Marketing</h3>
+    <p>Utilizadas para rastrear tu actividad en sitios web para mostrate publicidad relevante. Utilizamos proveedores de terceros para estos fines.</p>
+
+    <h3>Consentimiento</h3>
+    <p>Al continuar navegando por nuestro sitio, aceptas el uso de cookies tal como se describe en esta política. Puedes controlar y/o eliminar las cookies desde tu navegador.</p>
+
+    <h3>Cómo Controlar las Cookies</h3>
+    <ul>
+      <li><strong>Chrome:</strong> Configuración > Privacidad y seguridad > Cookies</li>
+      <li><strong>Firefox:</strong> Preferencias > Privacidad > Cookies</li>
+      <li><strong>Safari:</strong> Preferencias > Privacidad > Cookies</li>
+      <li><strong>Edge:</strong> Configuración > Privacidad > Cookies</li>
+    </ul>
+  </div>
+
+  <!-- POLÍTICA DE PRIVACIDAD -->
+  <div class="legal-section" id="privacidad">
+    <h2>Política de Privacidad</h2>
+    
+    <h3>Información que Recopilamos</h3>
+    <p>Recopilamos la siguiente información cuando utilizas CotidyFit:</p>
+    <ul>
+      <li>Información de registro (nombre, email, teléfono)</li>
+      <li>Datos de perfil (edad, peso, altura, objetivos)</li>
+      <li>Datos de actividad (entrenamientos, registros, mensajes)</li>
+      <li>Información técnica (dirección IP, tipo de navegador)</li>
+    </ul>
+
+    <h3>Cómo Usamos tu Información</h3>
+    <p>Utilizamos tu información para:</p>
+    <ul>
+      <li>Proporcionar y mejorar nuestros servicios</li>
+      <li>Personalizar tu experiencia</li>
+      <li>Comunicarnos contigo</li>
+      <li>Cumplir con obligaciones legales</li>
+      <li>Prevenir fraude y mejorar la seguridad</li>
+    </ul>
+
+    <h3>Protección de Datos</h3>
+    <p>Utilizamos encriptación SSL/TLS y otras medidas de seguridad para proteger tu información personal. Sin embargo, ningún sistema es 100% seguro.</p>
+
+    <h3>Derechos del Usuario</h3>
+    <p>Tienes derecho a:</p>
+    <ul>
+      <li>Acceder a tus datos personales</li>
+      <li>Corregir información inexacta</li>
+      <li>Solicitar la eliminación de tus datos</li>
+      <li>Oposición al procesamiento de datos</li>
+      <li>Portabilidad de datos</li>
+    </ul>
+
+    <h3>Retención de Datos</h3>
+    <p>Retenemos tus datos personales mientras tengas una cuenta activa. Si cierras tu cuenta, eliminaremos tus datos dentro de 30 días, excepto cuando sea requerido mantenerlos por ley.</p>
+
+    <h3>Cambios a esta Política</h3>
+    <p>Podemos actualizar esta política ocasionalmente. Te notificaremos de cambios significativos por email o anuncio en la plataforma.</p>
+
+    <h3>Contacto de Privacidad</h3>
+    <p>Si tienes preguntas sobre nuestra política de privacidad, contacta con nosotros en: cotidyfit@gmail.com</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-content">
+    <div class="footer-section">
+      <h4>CotidyFit</h4>
+      <p>Entrenamiento inteligente y personalizado</p>
+    </div>
+    <div class="footer-section">
+      <h4>Enlaces Rápidos</h4>
+      <ul>
+        <li><a href="index.html#servicios">Servicios</a></li>
+        <li><a href="index.html#app">App</a></li>
+        <li><a href="index.html#precios">Planes</a></li>
+        <li><a href="legal.html">Información Legal</a></li>
+      </ul>
+    </div>
+    <div class="footer-section">
+      <h4>Síguenos</h4>
+      <div class="footer-socials">
+        <a href="https://instagram.com" target="_blank" title="Instagram">📱</a>
+        <a href="https://linkedin.com" target="_blank" title="LinkedIn">💼</a>
+        <a href="https://youtube.com" target="_blank" title="YouTube">🎥</a>
+        <a href="https://tiktok.com" target="_blank" title="TikTok">🎵</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 CotidyFit - Todos los derechos reservados</p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
