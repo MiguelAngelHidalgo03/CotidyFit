@@ -24,7 +24,9 @@ function scrollToContact() {
 
 document.addEventListener('DOMContentLoaded', function() {
   if (typeof emailjs !== 'undefined') {
-    emailjs.init(ENV.EMAILJS_PUBLIC_KEY);
+    // Usar variables de entorno de Vercel o valores por defecto
+    const publicKey = window.VITE_EMAILJS_PUBLIC_KEY || 'BrforIbSPFKtOg9Or';
+    emailjs.init(publicKey);
   }
   document.getElementById('contactForm')?.addEventListener("submit", handleFormSubmit);
 });
@@ -57,7 +59,11 @@ function handleFormSubmit(e) {
   
   const htmlMessage = `<h2>Nueva solicitud de CotidyFit</h2><p><strong>Nombre:</strong> ${formData.nombre}</p><p><strong>Email:</strong> ${formData.email}</p><p><strong>Frecuencia:</strong> ${formData.frecuencia}</p><p><strong>Personas:</strong> ${formData.personas}</p><p><strong>Objetivo:</strong> ${formData.objetivo}</p><p><strong>Lesiones:</strong> ${formData.lesion || 'Ninguna'}</p><p><strong>Edad:</strong> ${formData.edad}</p><p><strong>Lugar:</strong> ${formData.lugar}</p><p><strong>Disponibilidad:</strong> ${formData.disponibilidad}</p><p><strong>Frecuencia deseada:</strong> ${formData.frecuencia_deseada}</p><p><strong>Cuándo empezar:</strong> ${formData.inicio}</p><p><strong>Peso:</strong> ${formData.peso ? formData.peso + ' kg' : 'N/A'}</p><p><strong>Altura:</strong> ${formData.altura ? formData.altura + ' cm' : 'N/A'}</p>`;
   
-  emailjs.send(ENV.EMAILJS_SERVICE_ID, ENV.EMAILJS_TEMPLATE_ID, {
+  // Usar variables de entorno de Vercel o valores por defecto
+  const serviceId = window.VITE_EMAILJS_SERVICE_ID || 'service_0pz3f4n';
+  const templateId = window.VITE_EMAILJS_TEMPLATE_ID || 'template_cotidyfit';
+  
+  emailjs.send(serviceId, templateId, {
     to_email: "cotidyfit@gmail.com",
     from_email: formData.email,
     from_name: formData.nombre,
