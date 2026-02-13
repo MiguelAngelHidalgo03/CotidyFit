@@ -2,18 +2,18 @@ module.exports = async function handler(req, res) {
   res.setHeader('Content-Type', 'application/json');
   
   if (req.method !== 'POST') {
-    return res.status(405).json({ success: false });
+    return res.status(405).json({ success: false, error: 'Method not allowed' });
   }
 
   const { nombre, email, frecuencia, objetivo, personas, lesion, edad, lugar, disponibilidad, frecuencia_deseada, inicio, peso, altura } = req.body;
 
   if (!nombre || !email || !frecuencia || !objetivo) {
-    return res.status(400).json({ success: false });
+    return res.status(400).json({ success: false, error: 'Missing required fields' });
   }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
-    return res.status(400).json({ success: false });
+    return res.status(400).json({ success: false, error: 'Invalid email format' });
   }
 
   const serviceId = process.env.EMAILJS_SERVICE_ID;
@@ -21,7 +21,8 @@ module.exports = async function handler(req, res) {
   const publicKey = process.env.EMAILJS_PUBLIC_KEY;
 
   if (!serviceId || !templateId || !publicKey) {
-    return res.status(500).json({ success: false });
+    console.error('Missing env vars:', { serviceId: !!serviceId, templateId: !!templateId, publicKey: !!publicKey });
+    return res.status(500).json({ success: false, error: 'Server configuration error' });
   }
 
   try {
