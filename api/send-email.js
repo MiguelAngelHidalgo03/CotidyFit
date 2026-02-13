@@ -26,13 +26,8 @@ module.exports = async function handler(req, res) {
       return res.status(500).json({ success: false });
     }
 
-    // Logo SVG inline (base64) para que se vea en emails
-    const logoSvg = `
-    <svg width="70" height="70" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="100" cy="100" r="95" fill="white"/>
-      <text x="100" y="120" font-size="80" font-weight="bold" text-anchor="middle" fill="#1e3a8a" font-family="Arial, sans-serif">C</text>
-    </svg>
-    `;
+    // Logo URL - usando jsdelivr CDN que funciona mejor en emails
+    const logoUrl = 'https://cdn.jsdelivr.net/gh/MiguelAngelHidalgo03/CotidyFit@main/img/Logo%20sin%20lema.svg';
 
     // Función auxiliar para crear el contenido HTML
     const createEmailTemplate = (isCompanyEmail = false) => `
@@ -49,7 +44,7 @@ module.exports = async function handler(req, res) {
         /* Header */
         .header { background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); padding: 40px 20px; text-align: center; }
         .logo-box { margin-bottom: 15px; }
-        .logo-box svg { max-width: 70px; height: auto; display: block; margin: 0 auto; }
+        .logo-box img { max-width: 80px; height: auto; display: block; margin: 0 auto; }
         .header h1 { color: white; font-size: 28px; margin: 10px 0; }
         .header p { color: rgba(255,255,255,0.9); font-size: 14px; }
         
@@ -78,6 +73,7 @@ module.exports = async function handler(req, res) {
         .contact-card a { color: #1e40af; text-decoration: none; font-weight: 600; }
         .contact-card a:hover { text-decoration: underline; }
         
+        
         /* Footer */
         .footer { background: #f3f4f6; padding: 25px; text-align: center; border-top: 1px solid #e5e7eb; }
         .footer p { margin: 5px 0; color: #6b7280; font-size: 12px; }
@@ -91,7 +87,7 @@ module.exports = async function handler(req, res) {
             <!-- Header -->
             <div class="header">
                 <div class="logo-box">
-                    ${logoSvg}
+                    <img src="${logoUrl}" alt="CotidyFit Logo" style="max-width: 80px; height: auto;">
                 </div>
                 <h1>CotidyFit</h1>
                 <p>Entrenamiento inteligente y personalizado</p>
@@ -251,17 +247,23 @@ module.exports = async function handler(req, res) {
     }
 
     // Pequeña espera para evitar problemas de rate limiting
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 200));
 
-    // Enviar email al cliente
+    // Enviar email al cliente - con manejo mejorado
+    let clientEmailSent = false;
     try {
-      console.log('Sending client email to:', email);
-      const clientEmailPayload = {
-        from: 'CotidyFit <noreply@resend.dev>',
+      console.log('=== INICIANDO ENVIO A CLIENTE ===');
+      console.log('Email destino:', email);
+      
+      const clientPayload = {
+        from: 'noreply@resend.dev',
         to: email,
         subject: '¡Solicitud recibida! CotidyFit',
-        html: createEmailTemplate(false)
+        html: createEmailTemplate(false),
+        replyTo: 'cotidyfit@gmail.com'
       };
+      
+      console.log('Payload preparado:', JSON.stringify(clientPayload).substring(0, 200));
       
       const clientEmailResponse = await fetch('https://api.resend.com/emails', {
         method: 'POST',
@@ -269,20 +271,21 @@ module.exports = async function handler(req, res) {
           'Authorization': `Bearer ${resendApiKey}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(clientEmailPayload)
+        body: JSON.stringify(clientPayload)
       });
 
       const clientData = await clientEmailResponse.json();
-      console.log('Client email response status:', clientEmailResponse.status);
-      console.log('Client email response:', clientData);
+      console.log('Status respuesta cliente:', clientEmailResponse.status);
+      console.log('Respuesta completa:', JSON.stringify(clientData));
       
-      if (!clientEmailResponse.ok) {
-        console.error('Client email failed with status', clientEmailResponse.status, ':', clientData);
+      if (clientEmailResponse.ok) {
+        console.log('✅ Email cliente enviado exitosamente a:', email);
+        clientEmailSent = true;
       } else {
-        console.log('Client email sent successfully to:', email);
+        console.error('❌ Email cliente falló:', clientData);
       }
     } catch (error) {
-      console.error('Client email exception:', error.message, error.stack);
+      console.error('⚠️ Excepción en email cliente:', error.message, error.stack);
     }
 
     // Devolver éxito en ambos casos
