@@ -26,145 +26,199 @@ module.exports = async function handler(req, res) {
       return res.status(500).json({ success: false });
     }
 
-    // Construir contenido HTML del email con estilos profesionales
-    const htmlContent = `
+    // Función auxiliar para crear el contenido HTML
+    const createEmailTemplate = (isCompanyEmail = false) => `
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <style>
-        body { font-family: 'Poppins', Arial, sans-serif; line-height: 1.6; color: #333; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; background: #f9fafb; border-radius: 8px; }
-        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
-        .header h1 { margin: 0; font-size: 28px; }
-        .header p { margin: 5px 0 0 0; font-size: 14px; opacity: 0.9; }
-        .content { background: white; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .section { margin-bottom: 25px; }
-        .section-title { font-size: 14px; font-weight: 600; color: #667eea; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px; }
-        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .info-item { background: #f3f4f6; padding: 12px 15px; border-radius: 6px; border-left: 3px solid #667eea; }
-        .info-label { font-size: 12px; color: #6b7280; font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
-        .info-value { font-size: 15px; color: #1f2937; font-weight: 500; }
-        .cta-section { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 6px; text-align: center; margin-top: 25px; }
-        .cta-section p { margin: 0; font-size: 14px; }
-        .footer { text-align: center; padding: 20px; color: #9ca3af; font-size: 12px; border-top: 1px solid #e5e7eb; margin-top: 20px; }
-        .highlight { background: #fef3c7; padding: 12px; border-left: 3px solid #f59e0b; border-radius: 4px; margin: 15px 0; font-size: 14px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', Arial, sans-serif; line-height: 1.6; color: #1f2937; background: #f9fafb; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .wrapper { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.07); }
+        
+        /* Header */
+        .header { background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); padding: 40px 20px; text-align: center; }
+        .logo-box { margin-bottom: 15px; }
+        .logo-box img { max-width: 60px; height: auto; }
+        .header h1 { color: white; font-size: 28px; margin: 10px 0; }
+        .header p { color: rgba(255,255,255,0.9); font-size: 14px; }
+        
+        /* Content */
+        .content { padding: 40px; }
+        .greeting { margin-bottom: 30px; }
+        .greeting h2 { color: #1e3a8a; font-size: 20px; margin-bottom: 10px; }
+        .greeting p { color: #6b7280; line-height: 1.8; margin-bottom: 5px; }
+        
+        /* Section */
+        .section { margin-bottom: 30px; }
+        .section-title { font-size: 14px; font-weight: 700; color: white; background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); padding: 10px 15px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px; }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .info-item { background: #f3f4f6; padding: 15px; border-radius: 8px; border-left: 4px solid #3b82f6; }
+        .info-label { font-size: 12px; color: #6b7280; font-weight: 600; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.3px; }
+        .info-value { font-size: 15px; color: #1f2937; font-weight: 500; word-break: break-word; }
+        
+        /* Highlight */
+        .highlight { background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); color: white; padding: 20px; border-radius: 8px; margin-top: 25px; text-align: center; }
+        .highlight p { margin: 5px 0; font-size: 14px; }
+        .highlight strong { font-size: 16px; }
+        
+        /* Contact Card */
+        .contact-card { background: #eff6ff; border: 2px solid #3b82f6; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; }
+        .contact-card p { margin: 5px 0; color: #1e3a8a; }
+        .contact-card a { color: #1e40af; text-decoration: none; font-weight: 600; }
+        .contact-card a:hover { text-decoration: underline; }
+        
+        /* Footer */
+        .footer { background: #f3f4f6; padding: 25px; text-align: center; border-top: 1px solid #e5e7eb; }
+        .footer p { margin: 5px 0; color: #6b7280; font-size: 12px; }
+        .socials { margin-top: 10px; }
+        .socials a { display: inline-block; margin: 0 8px; color: #1e40af; text-decoration: none; font-size: 12px; font-weight: 600; }
+        
+        .divider { height: 1px; background: #e5e7eb; margin: 20px 0; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>🔥 Nueva Solicitud de CotidyFit</h1>
-            <p>Formulario de entrenamiento personalizado</p>
-        </div>
+        <div class="wrapper">
+            <!-- Header -->
+            <div class="header">
+                <div class="logo-box">
+                    <img src="https://raw.githubusercontent.com/MiguelAngelHidalgo03/CotidyFit/main/img/Logo%20sin%20lema.svg" alt="CotidyFit Logo" style="filter: brightness(0) invert(1);">
+                </div>
+                <h1>CotidyFit</h1>
+                <p>Entrenamiento inteligente y personalizado</p>
+            </div>
 
-        <div class="content">
-            <!-- Información Personal -->
-            <div class="section">
-                <div class="section-title">👤 Información Personal</div>
-                <div class="info-grid">
-                    <div class="info-item">
-                        <div class="info-label">Nombre</div>
-                        <div class="info-value">${nombre}</div>
+            <!-- Content -->
+            <div class="content">
+                ${isCompanyEmail ? `
+                <div class="greeting">
+                    <h2>🔥 Nueva Solicitud Recibida</h2>
+                    <p><strong>${nombre}</strong> ha completado el formulario de solicitud y está listo para empezar su transformación.</p>
+                </div>
+                ` : `
+                <div class="greeting">
+                    <h2>¡Hola ${nombre.split(' ')[0]}! 👋</h2>
+                    <p>Gracias por tu interés en <strong>CotidyFit</strong>. Hemos recibido tu solicitud y pronto nuestro equipo se pondrá en contacto contigo para personalizar tu plan de entrenamiento.</p>
+                </div>
+                `}
+
+                <!-- Información Personal -->
+                <div class="section">
+                    <div class="section-title">👤 Información Personal</div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Nombre</div>
+                            <div class="info-value">${nombre}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Email de Contacto</div>
+                            <div class="info-value">${email}</div>
+                        </div>
                     </div>
-                    <div class="info-item">
-                        <div class="info-label">Email</div>
-                        <div class="info-value">${email}</div>
+                </div>
+
+                <!-- Información de Entrenamiento -->
+                <div class="section">
+                    <div class="section-title">💪 Información de Entrenamiento</div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Frecuencia Actual</div>
+                            <div class="info-value">${frecuencia}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Objetivo Principal</div>
+                            <div class="info-value">${objetivo}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Número de Personas</div>
+                            <div class="info-value">${personas || 'No especificado'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Frecuencia Deseada</div>
+                            <div class="info-value">${frecuencia_deseada || 'No especificado'}</div>
+                        </div>
                     </div>
+                </div>
+
+                <!-- Información de Salud -->
+                <div class="section">
+                    <div class="section-title">🏥 Información de Salud</div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Edad</div>
+                            <div class="info-value">${edad || 'No especificado'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Peso</div>
+                            <div class="info-value">${peso ? peso + ' kg' : 'No especificado'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Altura</div>
+                            <div class="info-value">${altura ? altura + ' cm' : 'No especificado'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Lesiones / Molestias</div>
+                            <div class="info-value">${lesion || 'Ninguna'}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información de Preferencias -->
+                <div class="section">
+                    <div class="section-title">📍 Preferencias</div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Lugar de Entrenamiento</div>
+                            <div class="info-value">${lugar || 'No especificado'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Disponibilidad</div>
+                            <div class="info-value">${disponibilidad || 'No especificado'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Cuándo Empezar</div>
+                            <div class="info-value">${inicio || 'No especificado'}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Highlight Section -->
+                <div class="highlight">
+                    <p><strong>✨ ¡Tu transformación empieza ahora!</strong></p>
+                    <p>Nuestro equipo de expertos está listo para ayudarte a alcanzar tus objetivos.</p>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="contact-card">
+                    <p><strong>¿Necesitas ayuda?</strong></p>
+                    <p>📞 <a href="tel:+34644595576">+34 644 595 576</a></p>
+                    <p>📧 <a href="mailto:cotidyfit@gmail.com">cotidyfit@gmail.com</a></p>
                 </div>
             </div>
 
-            <!-- Información de Entrenamiento -->
-            <div class="section">
-                <div class="section-title">💪 Información de Entrenamiento</div>
-                <div class="info-grid">
-                    <div class="info-item">
-                        <div class="info-label">Frecuencia Actual</div>
-                        <div class="info-value">${frecuencia}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Objetivo Principal</div>
-                        <div class="info-value">${objetivo}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Número de Personas</div>
-                        <div class="info-value">${personas || 'No especificado'}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Frecuencia Deseada</div>
-                        <div class="info-value">${frecuencia_deseada || 'No especificado'}</div>
-                    </div>
+            <!-- Footer -->
+            <div class="footer">
+                <p><strong>CotidyFit - Cada día Fit</strong></p>
+                <p>Entrenamiento inteligente y personalizado</p>
+                <div class="socials">
+                    <a href="https://www.instagram.com/cotidyfit/" target="_blank">Instagram</a> •
+                    <a href="https://www.tiktok.com/@cotidyfit" target="_blank">TikTok</a> •
+                    <a href="https://www.youtube.com/@cotidyfit" target="_blank">YouTube</a> •
+                    <a href="https://www.linkedin.com/company/cotidyfit" target="_blank">LinkedIn</a>
                 </div>
+                <p style="margin-top: 15px; font-size: 11px;">© 2026 CotidyFit - Todos los derechos reservados</p>
             </div>
-
-            <!-- Información de Salud -->
-            <div class="section">
-                <div class="section-title">🏥 Información de Salud</div>
-                <div class="info-grid">
-                    <div class="info-item">
-                        <div class="info-label">Edad</div>
-                        <div class="info-value">${edad || 'No especificado'}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Peso</div>
-                        <div class="info-value">${peso ? peso + ' kg' : 'No especificado'}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Altura</div>
-                        <div class="info-value">${altura ? altura + ' cm' : 'No especificado'}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Lesiones</div>
-                        <div class="info-value">${lesion || 'Ninguna'}</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Información de Preferencias -->
-            <div class="section">
-                <div class="section-title">📍 Preferencias</div>
-                <div class="info-grid">
-                    <div class="info-item">
-                        <div class="info-label">Lugar de Entrenamiento</div>
-                        <div class="info-value">${lugar || 'No especificado'}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Disponibilidad</div>
-                        <div class="info-value">${disponibilidad || 'No especificado'}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Cuándo Empezar</div>
-                        <div class="info-value">${inicio || 'No especificado'}</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CTA Section -->
-            <div class="cta-section">
-                <p><strong>✨ ¡Gracias por tu interés!</strong></p>
-                <p>Nos pondremos en contacto pronto para personalizar tu plan de entrenamiento.</p>
-            </div>
-
-            <div class="highlight">
-                <strong>⚡ Respuesta rápida:</strong> Nuestro equipo responderá en las próximas 24 horas. Puedes contactar directamente a través de WhatsApp +34 644 595 576
-            </div>
-        </div>
-
-        <div class="footer">
-            <p>© 2026 CotidyFit - Entrenamiento inteligente y personalizado</p>
-            <p>
-                <a href="https://www.instagram.com/cotidyfit/" style="color: #667eea; text-decoration: none;">Instagram</a> | 
-                <a href="https://www.tiktok.com/@cotidyfit" style="color: #667eea; text-decoration: none;">TikTok</a> | 
-                <a href="https://www.youtube.com/@cotidyfit" style="color: #667eea; text-decoration: none;">YouTube</a>
-            </p>
         </div>
     </div>
 </body>
 </html>
     `;
 
-    // Enviar email via Resend
-    const response = await fetch('https://api.resend.com/emails', {
+    // Enviar email a la empresa
+    const companyEmailResponse = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${resendApiKey}`,
@@ -174,14 +228,35 @@ module.exports = async function handler(req, res) {
         from: 'CotidyFit <onboarding@resend.dev>',
         to: 'cotidyfit@gmail.com',
         replyTo: email,
-        subject: `Nueva solicitud de ${nombre}`,
-        html: htmlContent
+        subject: `🔥 Nueva solicitud de ${nombre}`,
+        html: createEmailTemplate(true)
       })
     });
 
-    if (!response.ok) {
-      const error = await response.json();
-      console.error('Resend error:', error);
+    if (!companyEmailResponse.ok) {
+      const error = await companyEmailResponse.json();
+      console.error('Resend error (company email):', error);
+      return res.status(500).json({ success: false });
+    }
+
+    // Enviar email al cliente
+    const clientEmailResponse = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${resendApiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: 'CotidyFit <onboarding@resend.dev>',
+        to: email,
+        subject: '¡Solicitud recibida! CotidyFit',
+        html: createEmailTemplate(false)
+      })
+    });
+
+    if (!clientEmailResponse.ok) {
+      const error = await clientEmailResponse.json();
+      console.error('Resend error (client email):', error);
       return res.status(500).json({ success: false });
     }
 
