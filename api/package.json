@@ -1,0 +1,9 @@
+{
+  "name": "cotidyfit-api",
+  "version": "1.0.0",
+  "description": "CotidyFit API serverless functions",
+  "main": "send-email.js",
+  "dependencies": {
+    "nodemailer": "^6.9.7"
+  }
+}

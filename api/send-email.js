@@ -19,10 +19,18 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ success: false });
     }
 
-    // Obtener API key de Resend
+    // Obtener API keys
     const resendApiKey = process.env.RESEND_API_KEY;
+    const gmailUser = process.env.GMAIL_USER;
+    const gmailAppPassword = process.env.GMAIL_APP_PASSWORD;
+    
     if (!resendApiKey) {
       console.error('RESEND_API_KEY not configured');
+      return res.status(500).json({ success: false });
+    }
+    
+    if (!gmailUser || !gmailAppPassword) {
+      console.error('Gmail credentials not configured');
       return res.status(500).json({ success: false });
     }
 
@@ -249,43 +257,38 @@ module.exports = async function handler(req, res) {
     // Pequeña espera para evitar problemas de rate limiting
     await new Promise(resolve => setTimeout(resolve, 200));
 
-    // Enviar email al cliente - con manejo mejorado
+    // Enviar email al cliente - Gmail SMTP
     let clientEmailSent = false;
     try {
-      console.log('=== INICIANDO ENVIO A CLIENTE ===');
+      console.log('=== INICIANDO ENVIO A CLIENTE VIA GMAIL ===');
       console.log('Email destino:', email);
       
-      const clientPayload = {
-        from: 'noreply@cotidyfit.com',
+      // Usar nodemailer con Gmail SMTP
+      const nodemailer = require('nodemailer');
+      
+      const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false,
+        auth: {
+          user: gmailUser,
+          pass: gmailAppPassword
+        }
+      });
+
+      const mailOptions = {
+        from: `CotidyFit <${gmailUser}>`,
         to: email,
         subject: '¡Solicitud recibida! CotidyFit',
         html: createEmailTemplate(false),
         replyTo: 'cotidyfit@gmail.com'
       };
       
-      console.log('Payload preparado:', JSON.stringify(clientPayload).substring(0, 200));
-      
-      const clientEmailResponse = await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${resendApiKey}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(clientPayload)
-      });
-
-      const clientData = await clientEmailResponse.json();
-      console.log('Status respuesta cliente:', clientEmailResponse.status);
-      console.log('Respuesta completa:', JSON.stringify(clientData));
-      
-      if (clientEmailResponse.ok) {
-        console.log('✅ Email cliente enviado exitosamente a:', email);
-        clientEmailSent = true;
-      } else {
-        console.error('❌ Email cliente falló:', clientData);
-      }
+      const info = await transporter.sendMail(mailOptions);
+      console.log('✅ Email cliente enviado exitosamente:', info.messageId);
+      clientEmailSent = true;
     } catch (error) {
-      console.error('⚠️ Excepción en email cliente:', error.message, error.stack);
+      console.error('❌ Error enviando email al cliente:', error.message);
     }
 
     // Devolver éxito en ambos casos
