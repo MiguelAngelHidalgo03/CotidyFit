@@ -1,9 +1,0 @@
-{
-  "buildCommand": "echo 'Static site'",
-  "outputDirectory": ".",
-  "functions": {
-    "api/**/*.js": {
-      "runtime": "node@18.x"
-    }
-  }
-}
