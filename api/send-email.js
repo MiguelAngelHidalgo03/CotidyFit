@@ -228,7 +228,7 @@ module.exports = async function handler(req, res) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          from: 'CotidyFit <noreply@resend.dev>',
+          from: 'CotidyFit <noreply@cotidyfit.com>',
           to: 'cotidyfit@gmail.com',
           replyTo: email,
           subject: `🔥 Nueva solicitud de ${nombre}`,
@@ -256,7 +256,7 @@ module.exports = async function handler(req, res) {
       console.log('Email destino:', email);
       
       const clientPayload = {
-        from: 'noreply@resend.dev',
+        from: 'noreply@cotidyfit.com',
         to: email,
         subject: '¡Solicitud recibida! CotidyFit',
         html: createEmailTemplate(false),
