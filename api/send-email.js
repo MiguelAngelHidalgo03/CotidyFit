@@ -86,7 +86,7 @@ module.exports = async function handler(req, res) {
             <!-- Header -->
             <div class="header">
                 <div class="logo-box">
-                    <img src="${logoUrl}" alt="CotidyFit Logo" style="filter: brightness(0) invert(1);">
+                    <img src="${logoUrl}" alt="CotidyFit Logo">
                 </div>
                 <h1>CotidyFit</h1>
                 <p>Entrenamiento inteligente y personalizado</p>
@@ -227,7 +227,7 @@ module.exports = async function handler(req, res) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          from: 'CotidyFit <onboarding@resend.dev>',
+          from: 'CotidyFit <noreply@resend.dev>',
           to: 'cotidyfit@gmail.com',
           replyTo: email,
           subject: `🔥 Nueva solicitud de ${nombre}`,
@@ -235,13 +235,18 @@ module.exports = async function handler(req, res) {
         })
       });
 
+      const companyData = await companyEmailResponse.json();
       if (!companyEmailResponse.ok) {
-        const error = await companyEmailResponse.json();
-        console.error('Resend error (company email):', error);
+        console.error('Company email failed:', companyData);
+      } else {
+        console.log('Company email sent successfully:', companyData);
       }
     } catch (error) {
-      console.error('Company email failed:', error.message);
+      console.error('Company email exception:', error.message);
     }
+
+    // Pequeña espera para evitar problemas de rate limiting
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Enviar email al cliente
     try {
@@ -252,22 +257,24 @@ module.exports = async function handler(req, res) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          from: 'CotidyFit <onboarding@resend.dev>',
+          from: 'CotidyFit <noreply@resend.dev>',
           to: email,
           subject: '¡Solicitud recibida! CotidyFit',
           html: createEmailTemplate(false)
         })
       });
 
+      const clientData = await clientEmailResponse.json();
       if (!clientEmailResponse.ok) {
-        const error = await clientEmailResponse.json();
-        console.error('Resend error (client email):', error);
+        console.error('Client email failed:', clientData);
+      } else {
+        console.log('Client email sent successfully:', clientData);
       }
     } catch (error) {
-      console.error('Client email failed:', error.message);
+      console.error('Client email exception:', error.message);
     }
 
-    // Devolver éxito si al menos uno de los emails se envió
+    // Devolver éxito en ambos casos
     return res.status(200).json({ success: true });
   } catch (error) {
     console.error('API error:', error);
