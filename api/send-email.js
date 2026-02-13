@@ -34,8 +34,8 @@ module.exports = async function handler(req, res) {
       return res.status(500).json({ success: false });
     }
 
-    // Logo URL - usando jsdelivr CDN que funciona mejor en emails
-    const logoUrl = 'https://cdn.jsdelivr.net/gh/MiguelAngelHidalgo03/CotidyFit@main/img/Logo%20sin%20lema.svg';
+    // Logo URLs - múltiples opciones para compatibilidad en clientes de email
+    const logoUrl = 'https://cdn.jsdelivr.net/gh/MiguelAngelHidalgo03/CotidyFit@main/img/Logo%20sin%20lema.webp';
 
     // Función auxiliar para crear el contenido HTML
     const createEmailTemplate = (isCompanyEmail = false) => `
@@ -95,7 +95,7 @@ module.exports = async function handler(req, res) {
             <!-- Header -->
             <div class="header">
                 <div class="logo-box">
-                    <img src="${logoUrl}" alt="CotidyFit Logo" style="max-width: 80px; height: auto;">
+                    <img src="${logoUrl}" alt="CotidyFit" style="max-width: 100px; height: auto; display: block; margin: 0 auto; background: white; padding: 10px; border-radius: 8px;" />
                 </div>
                 <h1>CotidyFit</h1>
                 <p>Entrenamiento inteligente y personalizado</p>
@@ -236,7 +236,7 @@ module.exports = async function handler(req, res) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          from: 'CotidyFit <noreply@cotidyfit.com>',
+          from: 'CotidyFit <cotidyfit@gmail.com>',
           to: 'cotidyfit@gmail.com',
           replyTo: email,
           subject: `🔥 Nueva solicitud de ${nombre}`,
