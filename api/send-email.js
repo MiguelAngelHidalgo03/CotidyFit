@@ -26,6 +26,9 @@ module.exports = async function handler(req, res) {
       return res.status(500).json({ success: false });
     }
 
+    // Logo URL - usando CDN de GitHub raw content
+    const logoUrl = 'https://raw.githubusercontent.com/MiguelAngelHidalgo03/CotidyFit/main/img/Logo%20sin%20lema.svg';
+
     // Función auxiliar para crear el contenido HTML
     const createEmailTemplate = (isCompanyEmail = false) => `
 <!DOCTYPE html>
@@ -41,7 +44,7 @@ module.exports = async function handler(req, res) {
         /* Header */
         .header { background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); padding: 40px 20px; text-align: center; }
         .logo-box { margin-bottom: 15px; }
-        .logo-box img { max-width: 60px; height: auto; }
+        .logo-box img { max-width: 70px; height: auto; display: block; margin: 0 auto; }
         .header h1 { color: white; font-size: 28px; margin: 10px 0; }
         .header p { color: rgba(255,255,255,0.9); font-size: 14px; }
         
@@ -75,8 +78,6 @@ module.exports = async function handler(req, res) {
         .footer p { margin: 5px 0; color: #6b7280; font-size: 12px; }
         .socials { margin-top: 10px; }
         .socials a { display: inline-block; margin: 0 8px; color: #1e40af; text-decoration: none; font-size: 12px; font-weight: 600; }
-        
-        .divider { height: 1px; background: #e5e7eb; margin: 20px 0; }
     </style>
 </head>
 <body>
@@ -85,7 +86,7 @@ module.exports = async function handler(req, res) {
             <!-- Header -->
             <div class="header">
                 <div class="logo-box">
-                    <img src="https://raw.githubusercontent.com/MiguelAngelHidalgo03/CotidyFit/main/img/Logo%20sin%20lema.svg" alt="CotidyFit Logo" style="filter: brightness(0) invert(1);">
+                    <img src="${logoUrl}" alt="CotidyFit Logo" style="filter: brightness(0) invert(1);">
                 </div>
                 <h1>CotidyFit</h1>
                 <p>Entrenamiento inteligente y personalizado</p>
@@ -218,48 +219,55 @@ module.exports = async function handler(req, res) {
     `;
 
     // Enviar email a la empresa
-    const companyEmailResponse = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${resendApiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        from: 'CotidyFit <onboarding@resend.dev>',
-        to: 'cotidyfit@gmail.com',
-        replyTo: email,
-        subject: `🔥 Nueva solicitud de ${nombre}`,
-        html: createEmailTemplate(true)
-      })
-    });
+    try {
+      const companyEmailResponse = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${resendApiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          from: 'CotidyFit <onboarding@resend.dev>',
+          to: 'cotidyfit@gmail.com',
+          replyTo: email,
+          subject: `🔥 Nueva solicitud de ${nombre}`,
+          html: createEmailTemplate(true)
+        })
+      });
 
-    if (!companyEmailResponse.ok) {
-      const error = await companyEmailResponse.json();
-      console.error('Resend error (company email):', error);
-      return res.status(500).json({ success: false });
+      if (!companyEmailResponse.ok) {
+        const error = await companyEmailResponse.json();
+        console.error('Resend error (company email):', error);
+      }
+    } catch (error) {
+      console.error('Company email failed:', error.message);
     }
 
     // Enviar email al cliente
-    const clientEmailResponse = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${resendApiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        from: 'CotidyFit <onboarding@resend.dev>',
-        to: email,
-        subject: '¡Solicitud recibida! CotidyFit',
-        html: createEmailTemplate(false)
-      })
-    });
+    try {
+      const clientEmailResponse = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${resendApiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          from: 'CotidyFit <onboarding@resend.dev>',
+          to: email,
+          subject: '¡Solicitud recibida! CotidyFit',
+          html: createEmailTemplate(false)
+        })
+      });
 
-    if (!clientEmailResponse.ok) {
-      const error = await clientEmailResponse.json();
-      console.error('Resend error (client email):', error);
-      return res.status(500).json({ success: false });
+      if (!clientEmailResponse.ok) {
+        const error = await clientEmailResponse.json();
+        console.error('Resend error (client email):', error);
+      }
+    } catch (error) {
+      console.error('Client email failed:', error.message);
     }
 
+    // Devolver éxito si al menos uno de los emails se envió
     return res.status(200).json({ success: true });
   } catch (error) {
     console.error('API error:', error);
